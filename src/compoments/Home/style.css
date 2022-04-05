@@ -1,0 +1,118 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.container {
+    width: 35%;
+    margin: 0 auto;
+    margin-top: 150px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+
+.info p {
+    flex: 1;
+    margin-left: 15px;
+    font-size: 25px;
+}
+
+.info button {
+    padding: 13px 15px;
+    border-radius: 5px;
+    border: none;
+}
+
+.addtask {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.addtask .txt_todo {
+    flex: 1;
+}
+
+.addtask .txt_todo input {
+    width: 100%;
+    outline: none;
+    padding: 10px ;
+    font-size: 18px;
+}
+
+.addtask .btn {
+    margin-left: 50px;
+}
+
+.addtask .btn button, .filter button {
+    padding: 13px 15px;
+    border-radius: 5px;
+    border: none;
+}
+
+.btn button:hover, .filter button:hover , .info button:hover {
+    background-color: black;
+    color: white;
+}
+
+.filter {
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+    width: 80%;
+    margin: 15px auto;
+    
+}
+
+.listtask {
+    width: 100%;
+}
+
+.listtask ul {
+    list-style: none;
+}
+
+.listtask ul li {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+}
+.listtask ul li .tasktext {
+    flex: 5;
+}
+
+.taskdelete {
+    flex: 1;
+}
+.taskiscompleted {
+    flex: 1;
+}
+
+.active {
+    background-color: green;
+}
+
+.complete {
+    background-color:green;
+}
+
+.uncomplete {
+    background-color:red;
+}
+
+
+@media screen and (max-width: 600px) {
+    .container {
+        width: 100%;
+    }
+  }

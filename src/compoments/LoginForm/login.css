@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.container-form {
+    background-color: aqua;
+    height: 750px;
+    width: 100%;
+}
+
+
+.container-form .space {
+    height:150px;
+    width: 100%;
+    /* background-color:red; */
+}
+
+.container-form .login-box {
+    background-color: rgb(255, 255, 255);
+    width: 35%;
+    margin: 0 auto;
+    border-radius: 25px ;
+    flex-direction: column;
+}
+
+.container-form .login-box .userName {
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    padding: 25px;
+}
+.container-form .login-box .password {
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    padding: 25px;
+}
+
+.btn_login {
+    padding: 15px 135px;
+    font-size: 25px;
+    background-color: aqua;
+    margin-top: 15px;
+    border-radius: 25px;
+}
+
+.btn_login_nor {
+    padding: 15px 185px;
+    font-size: 25px;
+    background-color: aqua;
+    margin-top: 15px;
+    border-radius: 25px;
+
+}
+
+.link_signup {
+    padding: 15px;
+    cursor: pointer;
+    font-size: 25px;
+}
