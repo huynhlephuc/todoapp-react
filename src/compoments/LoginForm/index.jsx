@@ -12,7 +12,20 @@ import {
   } from "react-router-dom";
 import { doc, setDoc } from 'firebase/firestore';
 
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+const theme = createTheme();
 
 
 function LoginForm(props) {
@@ -23,25 +36,24 @@ function LoginForm(props) {
 
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
-    
-    // sign in
-    function handleSubmit() {
+    const handleSubmit = (event) => {
+        event.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-          })
-          .catch((error) => {
-          console.log(error)
-          
-          });
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+        console.log(error)
         
-    }
+        });
+      };
+   
 
     // sign up
-    function handleSignup() {
-        if (email && password) {
-            console.log(email, password); 
+    function handleSignup(event) {
+        event.preventDefault();
+        if (email&& password) {
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, email, password)
             .then(async(userCredential) => {
@@ -98,77 +110,86 @@ function LoginForm(props) {
   });
     }
 
-    //login with fb
-    function handleSubmitFB(){
-        const providerFB = new FacebookAuthProvider();
-        signInWithPopup(auth, providerFB)
-  .then(async(result) => {
-    // The signed-in user info.
-    const user = result.user;
-
-    await setDoc(doc(db, "users", user.uid),{
-        id: uuidv4(),
-        photoURL: user.photoURL,
-        displayName: user.displayName? user.displayName: "no name",
-        tasklist:[]
-
-    });
-
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-
-    // ...
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The AuthCredential type that was used.
-    const credential = FacebookAuthProvider.credentialFromError(error);
-
-    // ...
-  });
-    }
-
+   
     return (
-        <div className="container-form">
-            <div className="space">
-
-            </div>
-           <div className="login-box">
-                <h3 style={{fontSize: '30px'}}>{title}</h3>
-                <div>
-                    <input onChange={(e)=> {setEmail(e.target.value)}} type="text" className="userName" placeholder="Email ..." value={email}/>
-                </div>
-                <div>
-                    <input onChange={(e)=> {setPassword(e.target.value)}} type="password" className="password" placeholder="Password..." value={password}/>
-                </div>
-                <div>
-                    <button onClick= {title ==='LOGIN' ? handleSubmit : handleSignup} type="submit" className="btn_login_nor" >{title}</button>
-                </div>
-                <div>
-                    <button type="submit" className="btn_login" onClick={handleSubmitGoogle} >login with google</button>
-                </div>
-                <div>
-                    <button type="submit" className="btn_login" onClick={handleSubmitFB} >login with facebook</button>
-                </div>
-                
-                <div>
-                    <Route>
+   
+        <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              {title}
+            </Typography>
+            <Box component="form"  onSubmit={title==='LOGIN' ? handleSubmit: handleSignup} noValidate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onChange={(e)=>setEmail(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                onChange={(e)=>setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={title==='LOGIN' ? handleSubmit: handleSignup}
+              >
+                {title}
+              </Button>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2 }}
+                onClick={handleSubmitGoogle}
+              >
+                SignIn with Goole
+              </Button>
+              <Grid container>
+               
+                <Grid item>
+                <Route>
                        {
 
-                        title === "LOGIN" ?  <Link to="/signup">Dang ki</Link> : <Link to="/login">Dang nhap</Link>
+                        title === "LOGIN" ?  <Link to="/signup">Dang ki</Link> : <Link to="/login">{title}</Link>
                         }
                         
                     </Route>
-                    
-                    
-                </div>
-
-           </div>
-        </div>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Container>
+      </ThemeProvider>
     );
 }
 
