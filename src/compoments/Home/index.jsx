@@ -14,7 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
   import { deepOrange, deepPurple } from '@mui/material/colors';
 
 
-function Home(props) {
+function Home() {
 
     // context users
     const authUser = useContext(AuthContext)
@@ -38,6 +38,7 @@ function Home(props) {
     const userRef = doc(db, 'users', userID);
     
     useEffect(() =>{
+        //real time database - onSnapshot
         const unsub = onSnapshot(userRef, (doc) => {
             
             const data = doc.data();
