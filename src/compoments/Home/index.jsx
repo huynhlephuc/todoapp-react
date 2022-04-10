@@ -1,7 +1,7 @@
 import React, { useContext , useState, useEffect, useRef} from 'react';
 import {AuthContext} from '../../context/AuthProvider'
 import { getAuth, signOut } from "firebase/auth";
-import { doc, updateDoc , arrayUnion, onSnapshot, arrayRemove} from "firebase/firestore";
+import { doc, updateDoc , arrayUnion, onSnapshot, arrayRemove,setDoc} from "firebase/firestore";
 import {db} from "../../firebase-cogfix";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,17 +12,23 @@ import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
   import Avatar from '@mui/material/Avatar';
   import { deepOrange, deepPurple } from '@mui/material/colors';
+import { CloseFullscreen } from '@mui/icons-material';
 
 
 function Home() {
 
     // context users
     const authUser = useContext(AuthContext)
-    console.log("🚀 ~ file: index.jsx ~ line 21 ~ Home ~ authUser", authUser)
+    /* console.log("🚀 ~ file: index.jsx ~ line 21 ~ Home ~ authUser", authUser) */
     const [data , setData] = useState([]);
     const [taskName, setTaskName] = useState("");
     const [filter, setFilter] = useState("");
     const [displayName, setDisplayName] = useState("");
+    const [updateShow, setUpdateShow] = useState("btn_update_none");
+    const [addShow, setAddShow] = useState("btn_add_style");
+    const [task, setTaskt] = useState("");
+   /*  const [noteShow, setNoteShow] = useState("DELETE"); */
+
     const inputRef = useRef();
     
     
@@ -36,6 +42,7 @@ function Home() {
 
     const userID = authUser.user.uid;
     const userRef = doc(db, 'users', userID);
+    
     
     useEffect(() =>{
         //real time database - onSnapshot
@@ -83,21 +90,45 @@ function Home() {
             toast.success("Update task successfully")
           })
     }
+
+    async function upDateTodo(task) {
+        await updateDoc(userRef, {
+            tasklist:arrayUnion({
+                "id": task.id,
+                "name": taskName,
+                "iscompleted": task.iscompleted,
+            }),
+          })
+    }
     
     async function handleDeleteTask(id) {
         const taskById = data.find(task => task.id === id)
         await updateDoc(userRef, {
             tasklist: arrayRemove(taskById)
           }).then(() => {
-              toast.success("Delete task successfully", {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            })
+             if (id == "undentifled" ) {
+                toast.success("Update task successfully", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+             }else {
+                toast.success("Delete task successfully", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+             }
+
+
           })
     }
 
@@ -126,6 +157,46 @@ function Home() {
           
     }
 
+    async function handleEditTask(task) {
+    console.log("🚀 ~ file: index.jsx ~ line 161 ~ handleEditTask ~ task", task)
+      
+        setTaskName(task.name);
+        setUpdateShow("");
+        setAddShow("btn_add_hide");
+        
+     
+    }
+
+
+    async function upDateTodo(id)  {
+    const tasks = data.map(task => {
+        if(task.id === id) {
+            return {...task, name:  taskName}
+        }
+        return task;
+    })
+    await updateDoc(userRef, {
+        tasklist: tasks
+      }).then(()=> {
+        toast.success("Update task successfully")
+      })
+
+       /*  await updateDoc(userRef, {
+            tasklist:arrayUnion({
+                "id": task.id,
+                "name": taskName,
+                "iscompleted": task.iscompleted,
+            }),
+          })
+
+        setTaskName("");
+        setUpdateShow("btn_update_none");
+        setAddShow(""); */
+    }
+
+    
+    
+
     
     return (
        <>
@@ -145,7 +216,11 @@ function Home() {
                 <input ref={inputRef} type="text" value={taskName} onChange={(e) =>{setTaskName(e.target.value)}}/>
                 </div>
                 <div className="btn">
-                    <button onClick={handleAddTodo}>Add</button>
+
+                    
+                    <button className={addShow} onClick={handleAddTodo}>Add</button>
+                    <button className={updateShow} onClick={(e) => {upDateTodo(task.id)}}>Update</button>
+
                 </div>
             </div>
             <div className="filter">
@@ -159,7 +234,8 @@ function Home() {
                         data.map((task)=> {
                             return (
                                 <li key={task.id} className={task.iscompleted === true ? "complete" : "uncomplete"}>
-                                <p className="tasktext">{task.name}</p>
+                                <p className="tasktext" onClick={()=>{handleEditTask(task) && setTaskt(task)}}>{task.name}</p>
+                                
                                 <div className="taskdelete">
                                 <DeleteIcon onClick={()=> {handleDeleteTask(task.id)}}/>
                                 </div>

@@ -110,6 +110,24 @@
     background-color:red;
 }
 
+.updateBox {
+    flex: 10;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.addtask .btn .btn_update_none {
+    display: none;
+}
+
+.addtask .btn .btn_add_hide {
+    display: none;
+}
+
+.container .addtask .btn .btn_add_style {
+    background-color: red;
+    color: purple;
+}
 
 @media screen and (max-width: 600px) {
     .container {
